@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export function CreateList() {
   const [form, setForm] = useState({
     owner: "",
-    description: "",
+    nameOfYourList: "",
   });
 
   function handleChange(e) {
@@ -29,7 +29,7 @@ export function CreateList() {
       <h1>Crie a sua lista:</h1>
 
       <form onSubmit={handleChange} className="d-flex flex-column">
-        <div className="d-flex flex-column" mb-5>
+        <div className="d-flex flex-column" m-15>
           <label htmlFor="owner-input">Seu nome:</label>
           <input
             id="owner-input"
@@ -38,16 +38,26 @@ export function CreateList() {
             name="owner"
             onChange={handleChange}
           />
-          <label htmlFor="description-input" onChange={handleChange}>
-            Descricao:{" "}
+          <label htmlFor="nameOfYourList-input" onChange={handleChange}>
+            Nome da sua lista:
           </label>
           <input
-            id="description-input"
+            id="nameOfYourList-input"
             value={form.description}
             type="string"
-            name="description"
+            name="nameOfYourList"
             onChange={handleChange}
           />
+        </div>
+
+        <div className="d-flex flex-column" m-15>
+          <h2>Selecione abaixo os filmes da sua lista</h2>
+          <select>
+            <option>Array de todos os filmes para selecionar</option>
+          </select>
+          <button>Incluir filme</button>
+
+          <button>Cadastrar lista</button>
         </div>
       </form>
     </>
