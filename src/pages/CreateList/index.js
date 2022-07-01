@@ -2,21 +2,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export function CreateList() {
-  const [form, setForm] = useState({
-    owner: "",
-    nameOfYourList: "",
-  });
+  const [movies, setMovies] = useState([]);
+  console.log(movies);
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(form);
-  }
+  const [state, setState] = useState({
+    name: "",
+    nameOfYourList: "",
+    moviesList: [],
+  });
+  console.log(state);
 
   useEffect(() => {
     async function fetchMovies() {
       try {
-        const moviesList = await axios.get("https://ironrest.herokuapp.com/");
-        console.log(moviesList);
+        const moviesList = await axios.get(
+          "https://api.themoviedb.org/3/discover/movie?api_key=d822ae14da7fa354faf5580e16c68dd5"
+        );
+        setMovies(moviesList.data.results);
+        console.log(moviesList.data.results);
       } catch (error) {
         console.log(error);
       }
@@ -24,38 +27,52 @@ export function CreateList() {
     fetchMovies();
   }, []);
 
+  function handleChange(e) {
+    setState({ ...state, [e.target.name]: e.target.value });
+  }
+
   return (
     <>
       <h1>Crie a sua lista:</h1>
 
-      <form onSubmit={handleChange} className="d-flex flex-column">
-        <div className="d-flex flex-column" m-15>
+      <form className="d-flex flex-column">
+        <div className="d-flex flex-column">
           <label htmlFor="owner-input">Seu nome:</label>
           <input
+            name="name"
             id="owner-input"
-            value={form.owner}
-            type="string"
-            name="owner"
+            type="text"
             onChange={handleChange}
           />
-          <label htmlFor="nameOfYourList-input" onChange={handleChange}>
-            Nome da sua lista:
-          </label>
+          <label htmlFor="nameOfYourList-input">Nome da sua lista:</label>
           <input
-            id="nameOfYourList-input"
-            value={form.description}
-            type="string"
             name="nameOfYourList"
+            id="nameOfYourList-input"
+            type="text"
             onChange={handleChange}
           />
         </div>
 
-        <div className="d-flex flex-column" m-15>
+        <div className="d-flex flex-column">
           <h2>Selecione abaixo os filmes da sua lista</h2>
-          <select>
-            <option>Array de todos os filmes para selecionar</option>
-          </select>
-          <button>Incluir filme</button>
+          {movies.map((currentMovie) => {
+            return (
+              <>
+                <p>{currentMovie.original_title}</p>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setState({
+                      ...state,
+                      moviesList: [...state.moviesList, currentMovie],
+                    });
+                  }}
+                >
+                  Incluir filme
+                </button>
+              </>
+            );
+          })}
 
           <button>Cadastrar lista</button>
         </div>
